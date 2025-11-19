@@ -77,3 +77,31 @@ export const deletePais = async (
     return undefined;
   }
 };
+
+
+export type PaginacaoPaises = {
+  data: Pais[];
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+};
+
+export const fetchPaisesComFiltro = async (
+  page: number = 1,
+  limit: number = 10,
+  continenteId?: number
+): Promise<PaginacaoPaises> => {
+  try {
+    const params: Record<string, any> = { page, limit };
+    if (continenteId !== undefined) {
+      params.continenteId = continenteId;
+    }
+
+    const response = await api.get("/paises", { params });
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao buscar países:", error);
+    return { data: [], page, limit, total: 0, totalPages: 1 };
+  }
+};
